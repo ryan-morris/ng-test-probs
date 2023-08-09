@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { EMPTY, Observable, of } from 'rxjs';
+import { EMPTY, Observable, of, take, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +11,8 @@ export class AppComponent implements OnInit {
   public target$: Observable<string> = EMPTY;
 
   ngOnInit() {
-    this.target$ =  of('SET FIRST');
+    setTimeout(() => {
+      this.target$ =  of('SET FIRST').pipe(take(1));
+    }, 200);
   }
 }

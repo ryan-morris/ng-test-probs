@@ -1,6 +1,6 @@
 import { TestBed, tick } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { EMPTY } from 'rxjs';
+import { EMPTY, delay, of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 
 describe('AppComponent', () => {
@@ -14,11 +14,12 @@ describe('AppComponent', () => {
 
     fixture.detectChanges();
 
-    fixture.componentInstance.target$ = EMPTY;
+    fixture.componentInstance.target$ = of('BAD').pipe(delay(10000));
     fixture.detectChanges();
 
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
+    fixture.detectChanges();
     fixture.detectChanges();
 
 
@@ -33,6 +34,10 @@ describe('AppComponent', () => {
   it('should have result', async () => {
     const fixture = TestBed.createComponent(AppComponent);
     await fixture.whenStable();
+
+    fixture.detectChanges();
+
+    await new Promise((resolve) => setTimeout(resolve, 800))
 
     fixture.detectChanges();
 
