@@ -1,27 +1,47 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { EMPTY } from 'rxjs';
+import { By } from '@angular/platform-browser';
 
 describe('AppComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({
     declarations: [AppComponent]
   }));
 
-  it('should create the app', () => {
+  it(`should have loading while loading'`, async () => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
+    await fixture.whenStable();
 
-  it(`should have as title 'test-problems'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('test-problems');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('test-problems app is running!');
+
+    fixture.componentInstance.target$ = EMPTY;
+    fixture.detectChanges();
+
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    fixture.detectChanges();
+
+
+    const elsResult = fixture.nativeElement.querySelectorAll('.result');
+    const elsSpinner = fixture.nativeElement.querySelectorAll('.spinner');
+
+    console.log('check')
+    expect(elsResult.length).toEqual(0);
+    expect(elsSpinner.length).toEqual(1);
+  });
+
+  it('should have result', async () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    await fixture.whenStable();
+
+    fixture.detectChanges();
+
+    console.log(fixture.debugElement)
+    const elsResult = fixture.nativeElement.querySelectorAll('.result');
+    const elsSpinner = fixture.nativeElement.querySelectorAll('.spinner');
+
+    console.log('check')
+    expect(elsResult.length).toEqual(1);
+    expect(elsSpinner.length).toEqual(0);
   });
 });
